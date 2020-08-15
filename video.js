@@ -1,0 +1,59 @@
+var myPlayer = videojs('my-video',{playbackRates:[0.5,1,1.5,2]});
+var lengthOfVideo = myPlayer.duration();
+
+var resumeTime=0
+var resumeVolume=5
+
+if(JSON.parse(localStorage.getItem('currentTime'))){
+  resumeTime=localStorage.getItem('currentTime')
+}
+if(JSON.parse(localStorage.getItem('currentVolume'))!==undefined){
+  resumeVolume=Number(localStorage.getItem('currentVolume') )
+}
+
+
+myPlayer.src({type: 'video/mp4', src: 'test.mp4'});
+
+myPlayer.ready(function() {
+  if(JSON.parse(localStorage.getItem('currentTime'))){
+    bootbox.confirm({
+      title: `${document.querySelector('#my-video source').getAttribute('src')}`,
+      message: "Do you wish to resume from where you stopped",
+      buttons: {
+          cancel: {
+              label: '<i class="fa fa-times"></i> Start Over'
+          },
+          confirm: {
+            
+            label: '<i class="fa fa-check"></i> Resume'
+          }
+      },
+      callback: function (result) {
+          if (result){
+            myPlayer.play()
+           
+            
+          }
+          else{
+            myPlayer.play();
+           
+          }
+      
+      }
+    }); 
+    myPlayer.volume(resumeVolume/10);
+    
+  }
+  this.on('timeupdate',function(){
+    let whereYouAt = myPlayer.currentTime();
+    if(whereYouAt!==0){
+      localStorage.setItem('currentTime',JSON.stringify(Math.floor(whereYouAt)))
+    }
+  });
+  this.on('volumechange',function(){
+    let currentVolume = myPlayer.volume();
+    if(currentVolume!==1){
+      localStorage.setItem('currentVolume',JSON.stringify(Math.floor(currentVolume*10)))
+    }
+  });
+});
