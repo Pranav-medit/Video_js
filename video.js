@@ -4,15 +4,15 @@ var lengthOfVideo = myPlayer.duration();
 var resumeTime=0
 var resumeVolume=5
 
-if(JSON.parse(localStorage.getItem('currentTime'))){
-  resumeTime=localStorage.getItem('currentTime')
+if(JSON.parse(localStorage.getItem('currentTime'))!==undefined){
+  resumeTime=Number(JSON.parse(localStorage.getItem('currentTime')))
 }
 if(JSON.parse(localStorage.getItem('currentVolume'))!==undefined){
-  resumeVolume=Number(localStorage.getItem('currentVolume') )
+  resumeVolume=Number(JSON.parse(localStorage.getItem('currentVolume') ))
 }
 
 
-myPlayer.src({type: 'video/mp4', src: 'test.mp4'});
+// myPlayer.src({type: 'video/mp4', src: 'test.mp4'});
 
 myPlayer.ready(function() {
   if(JSON.parse(localStorage.getItem('currentTime'))){
@@ -31,7 +31,7 @@ myPlayer.ready(function() {
       callback: function (result) {
           if (result){
             myPlayer.play()
-           
+            myPlayer.currentTime(resumeTime)
             
           }
           else{
